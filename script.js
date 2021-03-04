@@ -66,6 +66,34 @@ class Board {
       }
     }
   }
+
+  hiddenShipsGrid() {
+    let grid = [];
+    let n = this.grid.length;
+    for (let i = 0; i < n; i++) {
+      let row = [];
+      for (let j = 0; j < n; j++) {
+        if (this.grid[i][j] === 'S') {
+          row.push('N');
+        } else {
+          row.push(this.grid[i][j]);
+        }
+      }
+      grid.push(row);
+    }
+    return grid;
+  }
+
+  printGrid(grid) {
+    let n = grid.length;
+    for (let i = 0; i < n; i++) {
+      let row = '';
+      for (let j = 0; j < n; j++) {
+        row += grid[i][j] + ' ';
+      }
+      console.log(row);
+    }
+  }
 }
 
 let board = new Board(6);
@@ -81,3 +109,6 @@ console.log(board.size);
 console.log(JSON.stringify(board));
 console.log(board.placeRandomShips());
 console.log(board.numShips());
+console.log(board.hiddenShipsGrid());
+board.printGrid(board.hiddenShipsGrid());
+board.printGrid(board.grid);
