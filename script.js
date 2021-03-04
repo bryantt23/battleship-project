@@ -96,6 +96,16 @@ class Board {
   }
 }
 
+class Player {
+  getMove() {
+    const input = prompt(
+      'enter a position with coordinates separated with a space like `4 7`'
+    );
+    const [r, c] = input.split(' ');
+    // console.log([r, c]);
+  }
+}
+
 let board = new Board(6);
 console.log(JSON.stringify(board));
 // board.grid[2][4] = 'S';
@@ -112,3 +122,5 @@ console.log(board.numShips());
 console.log(board.hiddenShipsGrid());
 board.printGrid(board.hiddenShipsGrid());
 board.printGrid(board.grid);
+const player = new Player();
+player.getMove();
