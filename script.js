@@ -39,17 +39,45 @@ class Board {
     console.log(freqCounts);
     return freqCounts['S'];
   }
+
+  attack(pos) {
+    const [r, c] = pos;
+    if (this.grid[r][c] === 'S') {
+      this.grid[r][c] = 'H';
+      console.log('You sunk my battleship!');
+      return true;
+    } else {
+      this.grid[r][c] = 'XH';
+      console.log('Miss!');
+      return false;
+    }
+  }
+
+  placeRandomShips() {
+    let ct = Math.floor(this.size * 0.25);
+    let shipCt = 0;
+
+    while (shipCt < ct) {
+      const row = Math.floor(Math.random() * this.grid.length);
+      const col = Math.floor(Math.random() * this.grid.length);
+      if (this.grid[row][col] !== 'S') {
+        this.grid[row][col] = 'S';
+        shipCt++;
+      }
+    }
+  }
 }
 
-let board = new Board(10);
+let board = new Board(6);
 console.log(JSON.stringify(board));
-board.grid[2][4] = 'S';
+// board.grid[2][4] = 'S';
 console.log(board.size);
-board.setElementAtPosition([2, 4], 'S');
-console.log(board.getElementAtPosition([2, 4]));
-console.log(board.getElementAtPosition([0, 0]));
-board.setElementAtPosition([5, 1], 'X');
-console.log(board.getElementAtPosition([5, 1]));
-board.setElementAtPosition([1, 1], 'S');
+// board.setElementAtPosition([2, 4], 'S');
+// console.log(board.getElementAtPosition([2, 4]));
+// console.log(board.getElementAtPosition([0, 0]));
+// board.setElementAtPosition([5, 1], 'X');
+// console.log(board.getElementAtPosition([5, 1]));
+// board.setElementAtPosition([1, 1], 'S');
 console.log(JSON.stringify(board));
+console.log(board.placeRandomShips());
 console.log(board.numShips());
