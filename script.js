@@ -30,14 +30,14 @@ class Board {
   // https://stackoverflow.com/questions/61228757/counting-occurrences-in-multidimensional-array
   numShips() {
     const freqCounts = this.grid.reduce((acc, arr) => {
-      console.log(arr);
+      // console.log(arr);
       for (const item of arr) {
         acc[item] = acc[item] !== undefined ? acc[item] + 1 : 1;
       }
       return acc;
     }, {});
     console.log(freqCounts);
-    return freqCounts['S'];
+    return freqCounts['S'] === undefined ? 0 : freqCounts['S'];
   }
 
   attack(pos) {
@@ -47,7 +47,7 @@ class Board {
       console.log('You sunk my battleship!');
       return true;
     } else {
-      this.grid[r][c] = 'XH';
+      this.grid[r][c] = 'X';
       console.log('Miss!');
       return false;
     }
@@ -97,15 +97,71 @@ class Board {
 }
 
 class Player {
-  getMove() {
+  getMove = () => {
     const input = prompt(
       'enter a position with coordinates separated with a space like `4 7`'
     );
     const [r, c] = input.split(' ');
     // console.log([r, c]);
+    return [Number(r), Number(c)];
+  };
+}
+
+class Battleship {
+  constructor(n) {
+    this.n = n;
+    this.player = new Player();
+    this.board = new Board(n);
+    this.remainingMisses = this.board.size / 2;
+  }
+
+  startGame() {
+    this.board.placeRandomShips();
+    // debugger;
+    this.board.printGrid(this.board.grid);
+    console.log(`Number of ships: ${this.board.numShips()}`);
+    this.board.printGrid(this.board.hiddenShipsGrid());
+    let gameOver = this.isGameOver();
+    while (!gameOver) {
+      this.turn();
+      gameOver = this.isGameOver();
+    }
+  }
+
+  isLoss() {
+    if (this.remainingMisses <= 0) {
+      console.log('you lose');
+      return true;
+    }
+    return false;
+  }
+
+  isWin() {
+    console.log('numShips', this.board.numShips());
+    if (this.board.numShips() === 0) {
+      console.log('you win');
+      return true;
+    }
+    return false;
+  }
+
+  isGameOver() {
+    console.log('loss', this.isLoss());
+    console.log('isWin', this.isWin());
+    return this.isLoss() || this.isWin();
+  }
+
+  turn() {
+    const arr = this.player.getMove();
+    if (!this.board.attack(arr)) {
+      this.remainingMisses--;
+    }
+    this.board.printGrid(this.board.hiddenShipsGrid());
+    console.log(`Number of remaining misses: ${this.remainingMisses}`);
   }
 }
 
+/*
 let board = new Board(6);
 console.log(JSON.stringify(board));
 // board.grid[2][4] = 'S';
@@ -124,3 +180,8 @@ board.printGrid(board.hiddenShipsGrid());
 board.printGrid(board.grid);
 const player = new Player();
 player.getMove();
+*/
+
+const battleship = new Battleship(2);
+console.log(JSON.stringify(battleship));
+battleship.startGame();
